@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpStatus, Param, Post } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { PayLoadDTO } from 'src/common/dto/payload.dto';
+import { PayLoadResponseDTO } from 'src/common/dto/payload.dto';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { StudentIdParamDto } from './dto/student.id.param.dto';
 
@@ -25,7 +25,7 @@ export class StudentController {
   @Get()
   @ApiResponse({ description: "All Student's List", status: HttpStatus.OK })
   getStudentList(): any {
-    return new PayLoadDTO({
+    return new PayLoadResponseDTO({
       statusCode: HttpStatus.OK,
       message: 'All Student List',
       data: this.student,
@@ -35,7 +35,7 @@ export class StudentController {
   @Get(':id')
   @ApiResponse({ description: 'Student Information', status: HttpStatus.OK })
   getStudent(@Param() param: StudentIdParamDto) {
-    return new PayLoadDTO({
+    return new PayLoadResponseDTO({
       statusCode: HttpStatus.OK,
       message: 'Student Info',
       data: this.student[param.id],
@@ -47,7 +47,7 @@ export class StudentController {
   @ApiResponse({ description: 'Create Student', status: HttpStatus.OK })
   createStudent(@Body() body: CreateStudentDto): any {
     this.student.push(body);
-    return new PayLoadDTO({
+    return new PayLoadResponseDTO({
       statusCode: HttpStatus.CREATED,
       message: 'Student Added',
       data: this.student[this.student.length-1]
