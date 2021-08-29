@@ -1,9 +1,20 @@
-import { Body, Controller, Get, HttpStatus, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
+import * as faker from 'faker';
 import { PayLoadResponseDTO } from 'src/common/dto/payload.dto';
+import { LoggerInterceptor } from 'src/common/interceptor/logger.interceptor';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { StudentIdParamDto } from './dto/student.id.param.dto';
 
+@UseInterceptors(LoggerInterceptor)
 @Controller('student')
 @ApiTags('Student')
 export class StudentController {
@@ -28,7 +39,12 @@ export class StudentController {
     return new PayLoadResponseDTO({
       statusCode: HttpStatus.OK,
       message: 'All Student List',
-      data: this.student,
+      data: [
+        {
+          student_list: this.student,
+          total: this.student.length,
+        },
+      ],
     });
   }
 
@@ -38,7 +54,10 @@ export class StudentController {
     return new PayLoadResponseDTO({
       statusCode: HttpStatus.OK,
       message: 'Student Info',
-      data: this.student[param.id],
+      data: {
+        name: faker.name.firstName(),
+        id: faker.datatype.number(),
+      },
     });
   }
 
@@ -50,7 +69,7 @@ export class StudentController {
     return new PayLoadResponseDTO({
       statusCode: HttpStatus.CREATED,
       message: 'Student Added',
-      data: this.student[this.student.length-1]
-    })
+      data: this.student[this.student.length - 1],
+    });
   }
 }
